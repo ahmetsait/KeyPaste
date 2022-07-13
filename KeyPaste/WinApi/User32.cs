@@ -1662,7 +1662,7 @@ namespace KeyPaste.WinApi
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern UIntPtr SendMessage(UIntPtr hWnd, WinMsg Msg, UIntPtr wParam, UIntPtr lParam);
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
 
         [DllImport("user32.dll", SetLastError = false)]
