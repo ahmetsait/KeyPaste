@@ -1,12 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using KeyPaste.Properties;
+﻿using KeyPaste.Properties;
 using KeyPaste.WinApi;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace KeyPaste
 {
@@ -34,7 +33,7 @@ namespace KeyPaste
         {
             if (e.Button == MouseButtons.Left)
             {
-                AutoTypeClipboardText();
+                MenuItem_Paste_Click(sender, e);
             }
         }
 
@@ -85,9 +84,12 @@ namespace KeyPaste
             return Process.GetProcessById(pid);
         }
 
-        private static void AutoTypeClipboardText()
+        volatile bool typing = false;
+
+        private void AutoTypeText(object obj)
         {
-            string text = Clipboard.GetText();
+            typing = true;
+            string text = (string)obj;
             
             // HACK: Make last window gain focus again.
             using (Form dummy = new Form())
@@ -96,27 +98,35 @@ namespace KeyPaste
                 dummy.Activate();
                 dummy.WindowState = FormWindowState.Minimized;
             }
+            Thread.Sleep(1);
             UIntPtr hWnd = User32.GetForegroundWindow();
 
-            INPUT[] inputSequence = new INPUT[text.Length * 2];
             UIntPtr ei = User32.GetMessageExtraInfo();
-            for (int i = 0; i < text.Length; i++)
+            INPUT[] inputSequence = new INPUT[2];
+            for (int i = 0; i < text.Length && typing; i++)
             {
-                INPUT input = new INPUT();
-                input.type = InputType.INPUT_KEYBOARD;
-                input.U.ki.wScan = (ScanCode)text[i];
-                input.U.ki.dwFlags = KeyEventFlags.KEYEVENTF_UNICODE;
-                input.U.ki.dwExtraInfo = ei;
-                inputSequence[i * 2] = input;
-                input.U.ki.dwFlags |= KeyEventFlags.KEYEVENTF_KEYUP;
-                inputSequence[i * 2 + 1] = input;
+                inputSequence[0] = new INPUT();
+                inputSequence[0].type = InputType.INPUT_KEYBOARD;
+                inputSequence[0].U.ki.wScan = (ScanCode)text[i];
+                inputSequence[0].U.ki.dwFlags = KeyEventFlags.KEYEVENTF_UNICODE;
+                inputSequence[0].U.ki.dwExtraInfo = ei;
+                inputSequence[1] = inputSequence[0];
+                inputSequence[1].U.ki.dwFlags |= KeyEventFlags.KEYEVENTF_KEYUP;
+                User32.SendInput((uint)inputSequence.Length, inputSequence, INPUT.Size);
+                Thread.Sleep(1);
             }
-            User32.SendInput((uint)inputSequence.Length, inputSequence, INPUT.Size);
+            typing = false;
         }
 
         private void MenuItem_Paste_Click(object sender, EventArgs e)
         {
-            AutoTypeClipboardText();
+            if (typing)
+                typing = false;
+            else
+            {
+                Thread t = new Thread(new ParameterizedThreadStart(AutoTypeText));
+                t.Start(Clipboard.GetText());
+            }
         }
 
         private void MenuItem_Exit_Click(object sender, EventArgs e)
