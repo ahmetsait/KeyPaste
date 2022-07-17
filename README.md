@@ -14,7 +14,7 @@ It can be useful e.g. if you're using a virtual machine and would like to copy &
 Pre-built binaries can be found inside [Releases](https://github.com/ahmetsait/KeyPaste/releases) section.
 
 ## Building
-KeyPaste can built by opening solution file [KeyPaste.sln](KeyPaste.sln) in Visual Studio and clicking Build ➤ Build Solution from the menu.
+KeyPaste can built by opening solution file [KeyPaste.sln](KeyPaste.sln) in Visual Studio and clicking `Build`→`Build Solution` from the menu.
 Alternatively, you can use MSBuild from the command line:
 ```
 %windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe KeyPaste.sln
