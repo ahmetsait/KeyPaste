@@ -1,6 +1,11 @@
-![Icon](KeyPaste/Resources/KeyPaste.svg)
+<div align="center">
 
-# KeyPaste [![Version](https://img.shields.io/github/v/release/ahmetsait/KeyPaste)](https://github.com/ahmetsait/KeyPaste/releases/latest) [![License](https://img.shields.io/github/license/ahmetsait/KeyPaste)](LICENSE)
+![Icon](KeyPaste/Resources/KeyPaste.svg)  
+KeyPaste  
+[![Platforms](https://img.shields.io/badge/platform-windows-blue)](https://github.com/ahmetsait/KeyPaste/releases) [![Version](https://img.shields.io/github/v/release/ahmetsait/KeyPaste)](https://github.com/ahmetsait/KeyPaste/releases/latest) [![Downloads](https://img.shields.io/github/downloads/ahmetsait/KeyPaste/total)](https://github.com/ahmetsait/KeyPaste/releases) [![License](https://img.shields.io/github/license/ahmetsait/KeyPaste)](LICENSE) 
+========
+</div>
+
 KeyPaste is a simple tray-icon application to copy & paste clipboard text by simulating keyboard input.
 It can be useful e.g. if you're using a virtual machine and would like to copy & paste text from the host machine.
 
